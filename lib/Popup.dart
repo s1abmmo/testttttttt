@@ -127,27 +127,59 @@ class _Popup extends State<Popup> {
                           width: listImageReview.value[a].size.width * 3,
                           child: Stack(
                             children: [
-                              GestureDetector(
-                                onPanUpdate: _onPanUpdateHandler,
-                                child: Transform.rotate(
-                                  angle: listImageReview.value[a].angle,
-                                  child: Container(
-                                    width:
-                                    listImageReview.value[a].size.width *
-                                        3,
-                                    child: Image.file(
-                                      File(svgRegExp.hasMatch(
-                                          listImageReview.value[a].path)
-                                          ? pathSvg +
-                                          ChangeSvg(listImageReview
-                                              .value[a].path)
-                                          : pathImages +
-                                          listImageReview.value[a].path),
-                                      fit: BoxFit.fitWidth,
-                                    ),
+                              Draggable(
+                                child:                               Container(
+                          width:
+                          listImageReview.value[a].size.width *
+                            3,
+                            child: Image.file(
+                              File(svgRegExp.hasMatch(
+                                  listImageReview.value[a].path)
+                                  ? pathSvg +
+                                  ChangeSvg(listImageReview
+                                      .value[a].path)
+                                  : pathImages +
+                                  listImageReview.value[a].path),
+                              fit: BoxFit.fitWidth,
+                            ),
+                          )
+          ,
+                                feedback: Container(
+                                  width:
+                                  listImageReview.value[a].size.width *
+                                      3,
+                                  child: Image.file(
+                                    File(svgRegExp.hasMatch(
+                                        listImageReview.value[a].path)
+                                        ? pathSvg +
+                                        ChangeSvg(listImageReview
+                                            .value[a].path)
+                                        : pathImages +
+                                        listImageReview.value[a].path),
+                                    fit: BoxFit.fitWidth,
                                   ),
                                 ),
+                                childWhenDragging: Container(),
+                                onDragEnd: (dragDetails) {
+                                  Offset nOffset = dragDetails.offset;
+                                  var x = nOffset.dx - ((width - (widthPopup)) / 2);
+                                  var y = nOffset.dy - ((height - (heightPopup)) / 2);
+                                  listImageReview.value[a].xPopupReview = x;
+                                  listImageReview.value[a].yPopupReview = y;
+                                  // print(nOffset);
+                                  // print("X : " +
+                                  //     listImageReview.value[a].xPopupReview.toString());
+                                  // print("Y : " +
+                                  //     listImageReview.value[a].yPopupReview.toString());
+
+                                  ImageReview ir = listImageReview.value[a];
+                                  listImageReview.value.remove(listImageReview.value[a]);
+                                  listImageReview.value.add(ir);
+
+                                  listImageReview.notifyListeners();
+                                },
                               ),
+
                               onHoverList[a]
                                   ? Align(
                                   alignment: Alignment.topLeft,
@@ -171,45 +203,6 @@ class _Popup extends State<Popup> {
                                           child: Icon(Icons
                                               .restore_from_trash_outlined),
                                         ),
-                                Draggable(
-                                  child: Icon(Icons.add),
-                                  feedback: GestureDetector(
-                                child: Transform.rotate(
-                                angle: listImageReview.value[a].angle,
-                                  child: Container(
-                                      color: Colors.transparent,
-                                      width: listImageReview.value[a].size.width * 3,
-                                      // height: listImageReview.value[a].size.height * 3,
-                                      child: Image.file(
-                                        File(svgRegExp
-                                            .hasMatch(listImageReview.value[a].path)
-                                            ? pathSvg +
-                                            ChangeSvg(listImageReview.value[a].path)
-                                            : pathImages + listImageReview.value[a].path),
-                                        fit: BoxFit.fitWidth,
-                                      )),
-                                ),
-                              ),
-        childWhenDragging: Container(),
-        onDragEnd: (dragDetails) {
-          Offset nOffset = dragDetails.offset;
-          var x = nOffset.dx - ((width - (widthPopup)) / 2);
-          var y = nOffset.dy - ((height - (heightPopup)) / 2);
-          listImageReview.value[a].xPopupReview = x;
-          listImageReview.value[a].yPopupReview = y;
-          // print(nOffset);
-          // print("X : " +
-          //     listImageReview.value[a].xPopupReview.toString());
-          // print("Y : " +
-          //     listImageReview.value[a].yPopupReview.toString());
-
-          ImageReview ir = listImageReview.value[a];
-          listImageReview.value.remove(listImageReview.value[a]);
-          listImageReview.value.add(ir);
-
-          listImageReview.notifyListeners();
-        },
-      ),
 
         ],
                                     ),
